@@ -1,5 +1,6 @@
 package com.exercise.tour.service.impl;
 
+import com.exercise.tour.exception.NotFoundException;
 import com.exercise.tour.model.Team;
 import com.exercise.tour.repository.TeamRepository;
 import com.exercise.tour.service.TeamService;
@@ -17,8 +18,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team getTeamById(Integer id) {
-        return teamRepository.findById(id).orElse(null);
-    }
+        return teamRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Team not found"));
+}
 
     @Override
     public List<Team> getAllTeams() {
@@ -34,7 +36,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public void updateTeam(Integer id, Team team) {
         Team team1 = teamRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementException("Team not found"));
+                () -> new NotFoundException("Team not found"));
         team1.setName(team.getName());
         team1.setCyclists(team.getCyclists());
         teamRepository.save(team1);

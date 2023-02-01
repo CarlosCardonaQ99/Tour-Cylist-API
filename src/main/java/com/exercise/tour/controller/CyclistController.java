@@ -4,6 +4,7 @@ import com.exercise.tour.model.Cyclist;
 import com.exercise.tour.model.Team;
 import com.exercise.tour.service.CyclistService;
 import com.exercise.tour.service.TeamService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class CyclistController {
     }
 
     @PostMapping("/save/{teamId}")
-    private ResponseEntity<?> saveCyclist(@RequestBody Cyclist cyclist, @PathVariable(value = "teamId") Integer teamId) {
+    private ResponseEntity<?> saveCyclist(@Valid @RequestBody Cyclist cyclist, @PathVariable(value = "teamId") Integer teamId) {
         response.clear();
         cyclistService.saveCyclist(teamId, cyclist);
         response.put("message", "cyclist saved succesfully");
@@ -57,9 +58,16 @@ public class CyclistController {
 
     @DeleteMapping(value = "/delete/{teamId}/{cyclistId}")
     private ResponseEntity<String> deleteCyclist(@PathVariable(value = "teamId") Integer teamId,
-                                            @PathVariable(value = "cyclistId") Integer cyclistId) {
+                                                 @PathVariable(value = "cyclistId") Integer cyclistId) {
 
         cyclistService.deleteCyclistById(teamId, cyclistId);
         return new ResponseEntity<String>("The user has been deleted", HttpStatus.ACCEPTED);
     }
+
+    /*@GetMapping("/nationality/{teamId}")
+    private ResponseEntity<?> findCyclistByNationality(String nationality, @PathVariable(value = "teamId") Integer teamId) {
+        response.clear();
+        response.put("Cyclists by nationality", cyclistService.findCyclistByNationality(nationality, teamId));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }*/
 }

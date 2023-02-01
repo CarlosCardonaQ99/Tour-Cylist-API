@@ -3,6 +3,7 @@ package com.exercise.tour.controller;
 
 import com.exercise.tour.model.Team;
 import com.exercise.tour.service.TeamService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class TeamController {
     }
 
     @PostMapping("/save")
-    private ResponseEntity<?> saveTeam(@RequestBody Team team) {
+    private ResponseEntity<?> saveTeam(@Valid @RequestBody Team team) {
         response.clear();
         teamService.saveTeam(team);
         response.put("message: ", "team saved succesfully");

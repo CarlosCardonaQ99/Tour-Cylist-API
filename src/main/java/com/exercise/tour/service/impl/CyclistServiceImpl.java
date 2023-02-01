@@ -1,5 +1,6 @@
 package com.exercise.tour.service.impl;
 
+import com.exercise.tour.exception.NotFoundException;
 import com.exercise.tour.model.Cyclist;
 import com.exercise.tour.model.Team;
 import com.exercise.tour.repository.CyclistRepository;
@@ -22,7 +23,9 @@ public class CyclistServiceImpl implements CyclistService {
 
     @Override
     public Cyclist getCyclistById(Integer id) {
-        return cyclistRepository.findById(id).orElse(null);
+        return cyclistRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Cyclist not found")
+        );
     }
 
     @Override
@@ -45,20 +48,13 @@ public class CyclistServiceImpl implements CyclistService {
         Cyclist newCyclist = getCyclistWithTeam(cyclistId, team);
         newCyclist.setName(cyclist.getName());
         newCyclist.setNationality(cyclist.getNationality());
-
-
-      /*  newCyclist.toBuilder()
-                .name(cyclist.getName())
-                .nationality(cyclist.getNationality())
-                .team(team)
-                .build();*/
         cyclistRepository.save(newCyclist);
-
 
     }
 
     private Cyclist getCyclistWithTeam(Integer cyclistId, Team team) {
-        return team.getCyclists().stream().filter(foundCyclist -> foundCyclist.getId() == cyclistId).findFirst().orElseThrow(() -> new RuntimeException("Cyclist by ID not found"));
+        return team.getCyclists().stream().filter(foundCyclist -> foundCyclist.getId() == cyclistId).findFirst().orElseThrow(
+                () -> new NotFoundException("Cyclist not found"));
     }
 
     private Team getTeamById(Integer teamId) {
@@ -70,9 +66,9 @@ public class CyclistServiceImpl implements CyclistService {
     public void deleteCyclistById(Integer teamId, Integer cyclistId) {
         Team team = getTeamById(teamId);
         Cyclist newCyclist = getCyclistWithTeam(cyclistId, team);
-        team.getCyclists().removeIf(cyclist -> cyclist.getId()== newCyclist.getId());
+        team.getCyclists().removeIf(cyclist -> cyclist.getId() == newCyclist.getId());
         teamRepository.save(team);
-        //cyclistRepository.delete(newCyclist);
 
     }
+
 }

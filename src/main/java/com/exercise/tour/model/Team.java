@@ -2,7 +2,10 @@ package com.exercise.tour.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
+
 import java.util.*;
 
 
@@ -21,6 +24,7 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "teamId")
     private int teamId;
+    @NotEmpty(message = "Name's team required")
     private String name;
 
     @OneToMany(mappedBy = "team", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
